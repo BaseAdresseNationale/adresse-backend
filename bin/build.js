@@ -23,15 +23,27 @@ async function main() {
   // ForEach => validate
   const datasets = await Promise.all(csvDatasets.map(async dataset => {
     const {url} = dataset.resources.find(ressource => ressource.format === 'csv')
-    const report = await isValid(url)
+    let report = null
+    let error = null
+    let status = 'unknow'
+
+    try {
+      report = await isValid(url)
+      status = 'ok'
+    } catch (err) {
+      status = 'malformed'
+      error = error.message
+    }
 
     return {
+      url,
+      report,
+      status,
+      error,
       id: dataset.id,
       title: dataset.title,
       license: dataset.license,
       licenseLabel: getLicenseLabel(dataset.license),
-      url,
-      report,
       valid: checkReport(report),
       page: dataset.page,
       organization: pick(dataset.organization, ['name', 'page', 'logo'])
