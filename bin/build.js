@@ -44,7 +44,7 @@ async function main() {
       title: dataset.title,
       license: dataset.license,
       licenseLabel: getLicenseLabel(dataset.license),
-      valid: checkReport(report),
+      valid: report && checkReport(report),
       page: dataset.page,
       organization: pick(dataset.organization, ['name', 'page', 'logo'])
     }
