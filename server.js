@@ -11,8 +11,7 @@ const app = express()
 app.use(cors())
 
 app.get('/datasets', wrap(async () => {
-  const data = [...datasets]
-  return data.map(dataset => {
+  return datasets.map(dataset => {
     return omit(dataset, 'report')
   })
 }))
