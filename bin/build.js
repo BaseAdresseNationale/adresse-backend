@@ -30,6 +30,7 @@ async function main() {
       title: dataset.title,
       license: dataset.license,
       licenseLabel: getLicenseLabel(dataset.license),
+      url,
       report,
       valid: checkReport(report),
       page: dataset.page,
