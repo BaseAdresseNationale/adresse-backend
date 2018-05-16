@@ -10,18 +10,18 @@ const {checkReport} = require('../lib/helpers/report')
 
 async function getDatasets() {
   const response = await got('https://www.data.gouv.fr/api/1/datasets/?tag=base-adresse-locale', {json: true})
-  return response.body.data
+  const {data} = response.body
+
+  // Filter only data with csv
+  return data.filter(dataset => dataset.resources.some(resource => resource.format === 'csv'))
 }
 
 async function main() {
   // Fetch data.gouv datasets
   const data = await getDatasets()
 
-  // Filter only data with csv
-  const csvDatasets = data.filter(dataset => dataset.resources.some(resource => resource.format === 'csv'))
-
   // ForEach => validate
-  const datasets = await Promise.all(csvDatasets.map(async dataset => {
+  const datasets = await Promise.all(data.map(async dataset => {
     const {url} = dataset.resources.find(ressource => ressource.format === 'csv')
     let report = null
     let error = null
