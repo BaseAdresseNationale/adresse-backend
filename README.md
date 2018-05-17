@@ -1,7 +1,7 @@
 # api-bal
 
 ## /datasets
-> Liste des jeux de données BAL répertoriés sur data.gouv.fr grâce au tag `base-adresse-locale` possédant une ressource au format `csv`
+> Liste des jeux de données BAL répertoriés sur data.gouv.fr grâce au tag `base-adresse-locale` possédant une ressource au format `csv` et provenant d’une organisation certifiée
 
 - `id`: Identifiant du jeu de données *[string]*
 - `title`: Titre du fichier *[string]*

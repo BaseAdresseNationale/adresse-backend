@@ -1,19 +1,48 @@
 #!/usr/bin/env node
 const {promisify} = require('util')
 const writeFile = promisify(require('fs').writeFile)
-const {pick} = require('lodash')
+const {pick, find} = require('lodash')
 const got = require('got')
 
 const {getLicenseLabel} = require('../lib/helpers/licenses')
 const {isValid} = require('../lib/helpers/validate')
 const {checkReport} = require('../lib/helpers/report')
 
+function certifiedOrganization(orientation) {
+  const {badges} = orientation
+
+  return badges.some(b => b.kind === 'certified') &&
+    badges.some(b => b.kind === 'public-service')
+}
+
+async function getOrganizations(organization) {
+  const {id} = organization
+  const response = await got(`https://www.data.gouv.fr/api/1/organizations/${id}/`, {json: true})
+
+  return response.body
+}
+
 async function getDatasets() {
   const response = await got('https://www.data.gouv.fr/api/1/datasets/?tag=base-adresse-locale', {json: true})
   const {data} = response.body
 
   // Filter only data with csv
-  return data.filter(dataset => dataset.resources.some(resource => resource.format === 'csv'))
+  const datasets = data.filter(dataset => {
+    return dataset.resources.some(resource => resource.format === 'csv')
+  })
+
+  // Fetch dataset organization
+  const organizations = await Promise.all(datasets.map(async dataset => {
+    return getOrganizations(dataset.organization)
+  }))
+
+  // Filter certified datasets with certified organization
+  const certifiedDataset = datasets.filter(dataset => {
+    const orientation = find(organizations, organization => organization.id === dataset.organization.id)
+    return certifiedOrganization(orientation)
+  })
+
+  return certifiedDataset
 }
 
 async function main() {
