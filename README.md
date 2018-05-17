@@ -19,7 +19,7 @@
 
 - `id`: Identifiant du jeu de données *[string]*
 - `title`: Titre du fichier *[string]*
-- `rapport`: Rapport complet de l’analyse de conformité du jeu de données *[object]*
+- `report`: Rapport complet de l’analyse de conformité du jeu de données *[object]*
 - `license`: License du jeu de données *[string]*
 - `licenseLabel`: Libellé de la license en français *[string]*
 - `organization`: Informations du producteur de la donnée (nom, logo, lien vers page data.gouv.fr) *[array]*
