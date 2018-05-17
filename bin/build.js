@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 const {promisify} = require('util')
 const writeFile = promisify(require('fs').writeFile)
-const {pick, find} = require('lodash')
+const {pick} = require('lodash')
 const got = require('got')
 
 const {getLicenseLabel} = require('../lib/helpers/licenses')
@@ -38,7 +38,7 @@ async function getDatasets() {
 
   // Filter certified datasets with certified organization
   const certifiedDataset = datasets.filter(dataset => {
-    const organization = find(organizations, organization => organization.id === dataset.organization.id)
+    const organization = organizations.find(organization => organization.id === dataset.organization.id)
     return isCertified(organization)
   })
 
