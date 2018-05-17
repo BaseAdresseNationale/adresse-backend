@@ -8,14 +8,14 @@ const {getLicenseLabel} = require('../lib/helpers/licenses')
 const {isValid} = require('../lib/helpers/validate')
 const {checkReport} = require('../lib/helpers/report')
 
-function certifiedOrganization(orientation) {
-  const {badges} = orientation
+function isCertified(organization) {
+  const {badges} = organization
 
   return badges.some(b => b.kind === 'certified') &&
     badges.some(b => b.kind === 'public-service')
 }
 
-async function getOrganizations(organization) {
+async function getOrganization(organization) {
   const {id} = organization
   const response = await got(`https://www.data.gouv.fr/api/1/organizations/${id}/`, {json: true})
 
@@ -33,13 +33,13 @@ async function getDatasets() {
 
   // Fetch dataset organization
   const organizations = await Promise.all(datasets.map(async dataset => {
-    return getOrganizations(dataset.organization)
+    return getOrganization(dataset.organization)
   }))
 
   // Filter certified datasets with certified organization
   const certifiedDataset = datasets.filter(dataset => {
-    const orientation = find(organizations, organization => organization.id === dataset.organization.id)
-    return certifiedOrganization(orientation)
+    const organization = find(organizations, organization => organization.id === dataset.organization.id)
+    return isCertified(organization)
   })
 
   return certifiedDataset
