@@ -1,12 +1,18 @@
 #!/usr/bin/env node
-const {promisify} = require('util')
-const writeFile = promisify(require('fs').writeFile)
+const path = require('path')
+const fs = require('fs-extra')
+const bluebird = require('bluebird')
+const chalk = require('chalk')
 const {pick} = require('lodash')
 const got = require('got')
+const {validate} = require('@etalab/bal')
 
 const {getLicenseLabel} = require('../lib/helpers/licenses')
-const {isValid} = require('../lib/helpers/validate')
-const {checkReport} = require('../lib/helpers/report')
+const {checkReport, saveReport} = require('../lib/helpers/report')
+
+/*
+** DATASETS
+*/
 
 function isCertified(organization) {
   const {badges} = organization
@@ -23,6 +29,7 @@ async function getOrganization(organization) {
 }
 
 async function getDatasets() {
+  console.log('Récupération des données…')
   const response = await got('https://www.data.gouv.fr/api/1/datasets/?tag=base-adresse-locale', {json: true})
   const {data} = response.body
 
@@ -45,28 +52,81 @@ async function getDatasets() {
   return certifiedDataset
 }
 
+async function saveDatasets(datasets) {
+  const dir = 'db'
+
+  // Write JSON datatset in datasets.json
+  await fs.ensureDir(dir)
+  await fs.writeJson(path.join(dir, 'datasets.json'), datasets)
+}
+
+/*
+** DOWNLOAD
+*/
+
+function checkHeaders(headers) {
+  const contentType = headers['content-type']
+
+  if (contentType &&
+    (contentType.includes('csv') || contentType.includes('application/octet-stream'))) {
+    return true
+  }
+
+  return false
+}
+
+async function downloadCsv(url) {
+  console.log('Téléchargement…')
+
+  const response = await got(url, {
+    encoding: null
+  })
+
+  if (checkHeaders(response.headers)) {
+    return response.body
+  }
+
+  throw new Error('Le fichier n’est pas au format CSV')
+}
+
+/*
+** MAIN
+*/
+
 async function main() {
   // Fetch data.gouv datasets
   const data = await getDatasets()
+  console.log(chalk.green.bold(data.length) + ' jeux de données trouvés')
 
-  // ForEach => validate
-  const datasets = await Promise.all(data.map(async dataset => {
+  // Create reports
+  const datasets = await bluebird.mapSeries(data, async dataset => {
+    console.log(chalk.blue(dataset.title))
     const {url} = dataset.resources.find(ressource => ressource.format === 'csv')
     let report = null
     let error = null
     let status = 'unknow'
 
+    // Download and validate dataset
     try {
-      report = await isValid(url)
+      // Downloading file
+      const buffer = await downloadCsv(url)
+      // Analysis
+      console.log('Analyse…')
+      report = await validate(buffer)
+
+      console.log('Sauvegarde…')
+      await saveReport(report, dataset.id)
+
+      console.log(chalk.green('Terminé !'))
       status = 'ok'
     } catch (err) {
+      console.error(chalk.red(err))
       status = 'malformed'
       error = error.message
     }
 
     return {
       url,
-      report,
       status,
       error,
       id: dataset.id,
@@ -77,11 +137,14 @@ async function main() {
       page: dataset.page,
       organization: pick(dataset.organization, ['name', 'page', 'logo'])
     }
-  }))
+  })
 
-  // Write JSON result file /datasets.json
-  const json = JSON.stringify(datasets)
-  await writeFile('datasets.json', json)
+  try {
+    await saveDatasets(datasets)
+    console.log(chalk.blue.bgGreen('Fin du processus'))
+  } catch (error) {
+    console.error(chalk.red(error))
+  }
 }
 
 main().catch(err => {

@@ -15,11 +15,10 @@
 - `error`: Erreur rencontrer durant l’analyse du fichier *[string]*
 
 ## /datasets/:id
-> Rapport complet de l’analyse de conformité du jeu de données demandé
+> Informations concernant le jeu de données
 
 - `id`: Identifiant du jeu de données *[string]*
 - `title`: Titre du fichier *[string]*
-- `report`: Rapport complet de l’analyse de conformité du jeu de données *[object]*
 - `license`: License du jeu de données *[string]*
 - `licenseLabel`: Libellé de la license en français *[string]*
 - `organization`: Informations du producteur de la donnée (nom, logo, lien vers page data.gouv.fr) *[array]*
@@ -28,3 +27,7 @@
 - `valid`: Vérification de la conformité du fichier bal *[bool]*
 - `status`: Status de l’analyse du fichier  *[string]*
 - `error`: Erreur rencontrer durant l’analyse du fichier *[string]*
+
+## /datasets/:id/report
+> Rapport complet de l’analyse de conformité du jeu de données demandé
+- `report`: Rapport complet de l’analyse de conformité du jeu de données *[object]*

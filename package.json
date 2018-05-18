@@ -15,8 +15,11 @@
   },
   "dependencies": {
     "@etalab/bal": "^0.3.5",
+    "bluebird": "^3.5.1",
+    "chalk": "^2.4.1",
     "cors": "^2.8.4",
     "express": "^4.16.3",
+    "fs-extra": "^6.0.1",
     "got": "^8.3.1",
     "lodash": "^4.17.10"
   },
