@@ -1,12 +1,13 @@
 #!/usr/bin/env node
-const {promisify} = require('util')
-const writeFile = promisify(require('fs').writeFile)
+const fs = require('fs-extra')
+const BlueBird = require('bluebird')
+const chalk = require('chalk')
 const {pick} = require('lodash')
 const got = require('got')
 
 const {getLicenseLabel} = require('../lib/helpers/licenses')
-const {isValid} = require('../lib/helpers/validate')
-const {checkReport} = require('../lib/helpers/report')
+const {getReport} = require('../lib/helpers/validate')
+const {checkReport, saveReport} = require('../lib/helpers/report')
 
 function isCertified(organization) {
   const {badges} = organization
@@ -23,6 +24,7 @@ async function getOrganization(organization) {
 }
 
 async function getDatasets() {
+  console.log('Récupération des données…')
   const response = await got('https://www.data.gouv.fr/api/1/datasets/?tag=base-adresse-locale', {json: true})
   const {data} = response.body
 
@@ -45,28 +47,45 @@ async function getDatasets() {
   return certifiedDataset
 }
 
+async function saveDatasets(datasets) {
+  const dir = 'db/'
+
+  // Write JSON datatset in datasets.json
+  try {
+    await fs.ensureDir(dir)
+    await fs.writeJson(dir + 'datasets.json', datasets)
+  } catch (err) {
+    console.error(chalk.red(err))
+  }
+}
+
 async function main() {
   // Fetch data.gouv datasets
   const data = await getDatasets()
+  console.log(chalk.green.bold(data.length) + ' jeux de données trouvés')
 
-  // ForEach => validate
-  const datasets = await Promise.all(data.map(async dataset => {
+  // Create reports
+  const datasets = await BlueBird.mapSeries(data, async dataset => {
+    console.log(chalk.blue(dataset.title))
     const {url} = dataset.resources.find(ressource => ressource.format === 'csv')
     let report = null
     let error = null
     let status = 'unknow'
 
+    // Download and validate dataset
     try {
-      report = await isValid(url)
+      report = await getReport(url)
+      await saveReport(report, dataset.id)
+      console.log(chalk.green('Terminé !'))
       status = 'ok'
     } catch (err) {
+      console.error(chalk.red(err))
       status = 'malformed'
       error = error.message
     }
 
     return {
       url,
-      report,
       status,
       error,
       id: dataset.id,
@@ -77,11 +96,10 @@ async function main() {
       page: dataset.page,
       organization: pick(dataset.organization, ['name', 'page', 'logo'])
     }
-  }))
+  })
 
-  // Write JSON result file /datasets.json
-  const json = JSON.stringify(datasets)
-  await writeFile('datasets.json', json)
+  saveDatasets(datasets)
+  console.log(chalk.blue.bgGreen('Fin du processus'))
 }
 
 main().catch(err => {
