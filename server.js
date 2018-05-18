@@ -8,21 +8,24 @@ const app = express()
 
 app.use(cors())
 
+app.param('id', (req, res, next, id) => {
+  req.dataset = datasets.find(d => d.id === id)
+  if (!req.dataset) {
+    return res.sendStatus(404)
+  }
+  next()
+})
+
 app.get('/datasets', (req, res) => {
   res.send(datasets)
 })
 
 app.get('/datasets/:id', (req, res) => {
-  const {id} = req.params
-  res.send(datasets.find(dataset => dataset.id === id))
+  res.send(req.dataset)
 })
 
 app.get('/datasets/:id/report', (req, res) => {
-  const {id} = req.params
-  const dataset = datasets.find(dataset => dataset.id === id)
-  const fileName = path.join(__dirname, 'db', 'reports', `${dataset.id}.json`)
-
-  res.sendFile(fileName)
+  res.sendFile(path.join(__dirname, 'db', 'reports', req.dataset.id + '.json'))
 })
 
 const port = process.env.PORT || 5000
