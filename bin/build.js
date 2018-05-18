@@ -10,6 +10,10 @@ const {validate} = require('@etalab/bal')
 const {getLicenseLabel} = require('../lib/helpers/licenses')
 const {checkReport, saveReport} = require('../lib/helpers/report')
 
+/*
+** DATASETS
+*/
+
 function isCertified(organization) {
   const {badges} = organization
 
@@ -48,6 +52,18 @@ async function getDatasets() {
   return certifiedDataset
 }
 
+async function saveDatasets(datasets) {
+  const dir = 'db'
+
+  // Write JSON datatset in datasets.json
+  await fs.ensureDir(dir)
+  await fs.writeJson(path.join(dir, 'datasets.json'), datasets)
+}
+
+/*
+** DOWNLOAD
+*/
+
 function checkHeaders(headers) {
   const contentType = headers['content-type']
 
@@ -73,13 +89,9 @@ async function downloadCsv(url) {
   throw new Error('Le fichier n’est pas au format CSV')
 }
 
-async function saveDatasets(datasets) {
-  const dir = 'db'
-
-  // Write JSON datatset in datasets.json
-  await fs.ensureDir(dir)
-  await fs.writeJson(path.join(dir, 'datasets.json'), datasets)
-}
+/*
+** MAIN
+*/
 
 async function main() {
   // Fetch data.gouv datasets
