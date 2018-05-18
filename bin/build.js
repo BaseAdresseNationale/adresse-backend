@@ -114,7 +114,9 @@ async function main() {
       console.log('Analyse…')
       report = await validate(buffer)
 
+      console.log('Sauvegarde…')
       await saveReport(report, dataset.id)
+
       console.log(chalk.green('Terminé !'))
       status = 'ok'
     } catch (err) {
