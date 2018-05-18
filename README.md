@@ -15,7 +15,7 @@
 - `error`: Erreur rencontrer durant l’analyse du fichier *[string]*
 
 ## /datasets/:id
-> Jeu de données demandé
+> Informations concernant le jeu de données
 
 - `id`: Identifiant du jeu de données *[string]*
 - `title`: Titre du fichier *[string]*

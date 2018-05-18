@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 const fs = require('fs-extra')
-const BlueBird = require('bluebird')
+const bluebird = require('bluebird')
 const chalk = require('chalk')
 const {pick} = require('lodash')
 const got = require('got')
 
 const {getLicenseLabel} = require('../lib/helpers/licenses')
-const {getReport} = require('../lib/helpers/validate')
+const {computeReport} = require('../lib/helpers/validate')
 const {checkReport, saveReport} = require('../lib/helpers/report')
 
 function isCertified(organization) {
@@ -65,7 +65,7 @@ async function main() {
   console.log(chalk.green.bold(data.length) + ' jeux de données trouvés')
 
   // Create reports
-  const datasets = await BlueBird.mapSeries(data, async dataset => {
+  const datasets = await bluebird.mapSeries(data, async dataset => {
     console.log(chalk.blue(dataset.title))
     const {url} = dataset.resources.find(ressource => ressource.format === 'csv')
     let report = null
@@ -74,7 +74,7 @@ async function main() {
 
     // Download and validate dataset
     try {
-      report = await getReport(url)
+      report = await computeReport(url)
       await saveReport(report, dataset.id)
       console.log(chalk.green('Terminé !'))
       status = 'ok'
