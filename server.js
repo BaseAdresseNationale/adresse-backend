@@ -1,5 +1,6 @@
 const path = require('path')
 const express = require('express')
+const paginate = require('express-paginate')
 const cors = require('cors')
 
 const datasets = require('./db/datasets.json')
@@ -16,8 +17,22 @@ app.param('id', (req, res, next, id) => {
   next()
 })
 
-app.get('/datasets', (req, res) => {
-  res.send(datasets)
+app.get('/datasets', paginate.middleware(10, 50), (req, res) => {
+  const results = [...datasets]
+  const itemCount = results.length
+  const pageCount = Math.ceil(itemCount / req.query.limit)
+  const datasetsArrays = []
+
+  while (results.length > 0) {
+    datasetsArrays.push(results.splice(0, req.query.limit))
+  }
+
+  res.send({
+    datasets: datasetsArrays[req.query.page - 1],
+    pageCount,
+    itemCount,
+    pages: paginate.getArrayPages(req)(5, pageCount, req.query.page)
+  })
 })
 
 app.get('/datasets/:id', (req, res) => {
