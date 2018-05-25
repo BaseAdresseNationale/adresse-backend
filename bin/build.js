@@ -34,6 +34,7 @@ async function getDatasets() {
   const {data} = response.body
 
   // Filter only data with csv
+  console.log(chalk.blue.bold(data.length) + ' jeux de données trouvés')
   const datasets = data.filter(dataset => {
     return dataset.resources.some(resource => resource.format === 'csv')
   })
@@ -96,7 +97,7 @@ async function downloadCsv(url) {
 async function main() {
   // Fetch data.gouv datasets
   const data = await getDatasets()
-  console.log(chalk.green.bold(data.length) + ' jeux de données trouvés')
+  console.log(chalk.green.bold(data.length) + ' jeux de données éligibles')
 
   // Create reports
   const datasets = await bluebird.mapSeries(data, async dataset => {
