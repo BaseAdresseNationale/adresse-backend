@@ -131,6 +131,7 @@ async function main() {
       error,
       id: dataset.id,
       title: dataset.title,
+      description: dataset.description,
       license: dataset.license,
       licenseLabel: getLicenseLabel(dataset.license),
       valid: report && checkReport(report),
