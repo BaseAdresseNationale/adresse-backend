@@ -10,6 +10,16 @@ const {validate} = require('@etalab/bal')
 const {getLicenseLabel} = require('../lib/helpers/licenses')
 const {checkReport, saveReport} = require('../lib/helpers/report')
 
+const REPORT_KEYS_TO_PERSIST = [
+  'knownFields',
+  'unknownFields',
+  'aliasedFields',
+  'fileValidation',
+  'rowsWithErrors',
+  'parseMeta',
+  'rowErrorsCount'
+]
+
 /*
 ** DATASETS
 */
@@ -116,7 +126,7 @@ async function main() {
       report = await validate(buffer)
 
       console.log('Sauvegarde…')
-      await saveReport(report, dataset.id)
+      await saveReport(pick(report, REPORT_KEYS_TO_PERSIST), dataset.id)
 
       console.log(chalk.green('Terminé !'))
       status = 'ok'
