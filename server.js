@@ -1,8 +1,25 @@
+const {callbackify} = require('util')
 const path = require('path')
 const express = require('express')
 const cors = require('cors')
+const {omit} = require('lodash')
+
+const {loadDataset} = require('./lib/db')
 
 const datasets = require('./db/datasets.json')
+
+function wrap(handler) {
+  handler = callbackify(handler)
+  return (req, res) => {
+    handler(req, (err, result) => {
+      if (err) {
+        res.status(500).send({code: 500, message: err.message})
+      } else {
+        res.send(result)
+      }
+    })
+  }
+}
 
 const app = express()
 
@@ -27,6 +44,23 @@ app.get('/datasets/:id', (req, res) => {
 app.get('/datasets/:id/report', (req, res) => {
   res.sendFile(path.join(__dirname, 'db', 'reports', req.dataset.id + '.json'))
 })
+
+app.get('/datasets/:id/data/summary', wrap(async req => {
+  const dataset = await loadDataset(req.dataset.id)
+  return {communes: Object.keys(dataset)}
+}))
+
+app.get('/datasets/:id/data/:codeCommune', wrap(async req => {
+  const dataset = await loadDataset(req.dataset.id)
+  const commune = dataset[req.params.codeCommune]
+  return {...commune, voies: Object.values(commune.voies).map(v => omit(v, 'numeros'))}
+}))
+
+app.get('/datasets/:id/data/:codeCommune/:codeVoie', wrap(async req => {
+  const dataset = await loadDataset(req.dataset.id)
+  const voie = dataset[req.params.codeCommune].voies[req.params.codeVoie]
+  return {...voie, numeros: Object.values(voie.numeros)}
+}))
 
 const port = process.env.PORT || 5000
 

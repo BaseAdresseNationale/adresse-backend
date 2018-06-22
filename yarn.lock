@@ -44,17 +44,16 @@
   dependencies:
     arrify "^1.0.1"
 
-"@etalab/bal@^0.3.5":
-  version "0.3.5"
-  resolved "https://registry.yarnpkg.com/@etalab/bal/-/bal-0.3.5.tgz#75059e333614b5af5f252d34b5360872a6727ddd"
+"@etalab/bal@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@etalab/bal/-/bal-0.4.0.tgz#adabfabbd436f220752eda7f4a0e43df62aac3a2"
   dependencies:
-    blob-to-buffer "^1.2.6"
+    blob-to-buffer "^1.2.8"
     date-fns "^1.29.0"
     debug "^3.1.0"
     jschardet-french "^0.0.1"
-    papaparse "^4.3.6"
-    proj4 "^2.4.4"
-    yargs "^10.0.3"
+    papaparse "^4.5.0"
+    yargs "^11.0.0"
 
 "@ladjs/time-require@^0.1.4":
   version "0.1.4"
@@ -658,9 +657,9 @@ binary-extensions@^1.0.0:
   version "1.11.0"
   resolved "https://registry.yarnpkg.com/binary-extensions/-/binary-extensions-1.11.0.tgz#46aa1751fb6a2f93ee5e689bb1087d4b14c6c205"
 
-blob-to-buffer@^1.2.6:
-  version "1.2.7"
-  resolved "https://registry.yarnpkg.com/blob-to-buffer/-/blob-to-buffer-1.2.7.tgz#bd8eee0aef300b509e2305ad752cde8c14e6499c"
+blob-to-buffer@^1.2.8:
+  version "1.2.8"
+  resolved "https://registry.yarnpkg.com/blob-to-buffer/-/blob-to-buffer-1.2.8.tgz#78eeeb332f1280ed0ca6fb2b60693a8c6d36903a"
 
 bluebird@^3.0.0, bluebird@^3.5.1:
   version "3.5.1"
@@ -2893,10 +2892,6 @@ methods@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/methods/-/methods-1.1.2.tgz#5529a4d67654134edcc5266656835b0f851afcee"
 
-mgrs@1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/mgrs/-/mgrs-1.0.0.tgz#fb91588e78c90025672395cb40b25f7cd6ad1829"
-
 micromatch@^2.1.5:
   version "2.3.11"
   resolved "https://registry.yarnpkg.com/micromatch/-/micromatch-2.3.11.tgz#86677c97d1720b363431d04d0d15293bd38c1565"
@@ -3305,9 +3300,9 @@ package-json@^4.0.0:
     registry-url "^3.0.3"
     semver "^5.1.0"
 
-papaparse@^4.3.6:
-  version "4.4.0"
-  resolved "https://registry.yarnpkg.com/papaparse/-/papaparse-4.4.0.tgz#6bcdbda80873e00cfb0bdcd7a4571c72a9a40168"
+papaparse@^4.5.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/papaparse/-/papaparse-4.5.0.tgz#fb625d390b6e5d544db20658ce3665002c3d8e80"
 
 parse-glob@^3.0.4:
   version "3.0.4"
@@ -3512,13 +3507,6 @@ process-nextick-args@~2.0.0:
 progress@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/progress/-/progress-2.0.0.tgz#8a1be366bf8fc23db2bd23f10c6fe920b4389d1f"
-
-proj4@^2.4.4:
-  version "2.4.4"
-  resolved "https://registry.yarnpkg.com/proj4/-/proj4-2.4.4.tgz#c03d825e380f6850a4a7af5d20d365f6b72c4042"
-  dependencies:
-    mgrs "1.0.0"
-    wkt-parser "^1.2.0"
 
 proto-props@^1.1.0:
   version "1.1.0"
@@ -4427,10 +4415,6 @@ widest-line@^2.0.0:
   dependencies:
     string-width "^2.1.1"
 
-wkt-parser@^1.2.0:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/wkt-parser/-/wkt-parser-1.2.1.tgz#3339689dbc549c103fc5c7447543534785ff8d4d"
-
 wordwrap@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/wordwrap/-/wordwrap-1.0.0.tgz#27584810891456a4171c8d0226441ade90cbcaeb"
@@ -4554,15 +4538,15 @@ yallist@^3.0.0, yallist@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/yallist/-/yallist-3.0.2.tgz#8452b4bb7e83c7c188d8041c1a837c773d6d8bb9"
 
-yargs-parser@^8.1.0:
-  version "8.1.0"
-  resolved "https://registry.yarnpkg.com/yargs-parser/-/yargs-parser-8.1.0.tgz#f1376a33b6629a5d063782944da732631e966950"
+yargs-parser@^9.0.2:
+  version "9.0.2"
+  resolved "https://registry.yarnpkg.com/yargs-parser/-/yargs-parser-9.0.2.tgz#9ccf6a43460fe4ed40a9bb68f48d43b8a68cc077"
   dependencies:
     camelcase "^4.1.0"
 
-yargs@^10.0.3:
-  version "10.1.2"
-  resolved "https://registry.yarnpkg.com/yargs/-/yargs-10.1.2.tgz#454d074c2b16a51a43e2fb7807e4f9de69ccb5c5"
+yargs@^11.0.0:
+  version "11.0.0"
+  resolved "https://registry.yarnpkg.com/yargs/-/yargs-11.0.0.tgz#c052931006c5eee74610e5fc0354bedfd08a201b"
   dependencies:
     cliui "^4.0.0"
     decamelize "^1.1.1"
@@ -4575,4 +4559,4 @@ yargs@^10.0.3:
     string-width "^2.0.0"
     which-module "^2.0.0"
     y18n "^3.2.1"
-    yargs-parser "^8.1.0"
+    yargs-parser "^9.0.2"

@@ -8,7 +8,8 @@ const got = require('got')
 const {validate} = require('@etalab/bal')
 
 const {getLicenseLabel} = require('../lib/helpers/licenses')
-const {checkReport, saveReport} = require('../lib/helpers/report')
+const {checkReport, saveReport, saveData} = require('../lib/helpers/report')
+const {extractRowsAsCommunes} = require('../lib/tree')
 
 const REPORT_KEYS_TO_PERSIST = [
   'knownFields',
@@ -127,6 +128,7 @@ async function main() {
 
       console.log('Sauvegarde…')
       await saveReport(pick(report, REPORT_KEYS_TO_PERSIST), dataset.id)
+      await saveData(extractRowsAsCommunes(report.normalizedRows), dataset.id)
 
       console.log(chalk.green('Terminé !'))
       status = 'ok'
