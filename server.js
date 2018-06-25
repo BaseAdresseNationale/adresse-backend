@@ -49,6 +49,7 @@ app.get('/datasets/:id/report', (req, res) => {
 app.get('/datasets/:id/data/summary', wrap(async req => {
   const dataset = await loadDataset(req.dataset.id)
   return {
+    ...dataset,
     communes: await expandCommunes(
       Object.values(dataset.communes).map(c => omit(c, 'voies'))
     )
