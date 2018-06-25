@@ -4,8 +4,8 @@ const express = require('express')
 const cors = require('cors')
 const {omit} = require('lodash')
 
+const {expandCommune, expandCommunes} = require('./lib/expand-communes')
 const {loadDataset} = require('./lib/db')
-const {expandCommunes} = require('./lib/expand-communes')
 
 const datasets = require('./db/datasets.json')
 
@@ -50,20 +50,20 @@ app.get('/datasets/:id/data/summary', wrap(async req => {
   const dataset = await loadDataset(req.dataset.id)
   return {
     communes: await expandCommunes(
-      Object.keys(dataset).map(codeCommune => ({code: codeCommune}))
+      Object.values(dataset.communes).map(c => omit(c, 'voies'))
     )
   }
 }))
 
 app.get('/datasets/:id/data/:codeCommune', wrap(async req => {
   const dataset = await loadDataset(req.dataset.id)
-  const commune = dataset[req.params.codeCommune]
+  const commune = await expandCommune(dataset.communes[req.params.codeCommune])
   return {...commune, voies: Object.values(commune.voies).map(v => omit(v, 'numeros'))}
 }))
 
 app.get('/datasets/:id/data/:codeCommune/:codeVoie', wrap(async req => {
   const dataset = await loadDataset(req.dataset.id)
-  const voie = dataset[req.params.codeCommune].voies[req.params.codeVoie]
+  const voie = dataset.communes[req.params.codeCommune].voies[req.params.codeVoie]
   return {...voie, numeros: Object.values(voie.numeros)}
 }))
 
