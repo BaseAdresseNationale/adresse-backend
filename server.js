@@ -5,6 +5,7 @@ const cors = require('cors')
 const {omit} = require('lodash')
 
 const {loadDataset} = require('./lib/db')
+const {expandCommunes} = require('./lib/expand-communes')
 
 const datasets = require('./db/datasets.json')
 
@@ -47,7 +48,11 @@ app.get('/datasets/:id/report', (req, res) => {
 
 app.get('/datasets/:id/data/summary', wrap(async req => {
   const dataset = await loadDataset(req.dataset.id)
-  return {communes: Object.keys(dataset)}
+  return {
+    communes: await expandCommunes(
+      Object.keys(dataset).map(codeCommune => ({code: codeCommune}))
+    )
+  }
 }))
 
 app.get('/datasets/:id/data/:codeCommune', wrap(async req => {

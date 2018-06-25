@@ -55,6 +55,10 @@
     papaparse "^4.5.0"
     yargs "^11.0.0"
 
+"@etalab/cog@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@etalab/cog/-/cog-0.1.0.tgz#a54b48600cb4714f46eaba6fc5152104e0465f4a"
+
 "@ladjs/time-require@^0.1.4":
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/@ladjs/time-require/-/time-require-0.1.4.tgz#5c615d75fd647ddd5de9cf6922649558856b21a1"
