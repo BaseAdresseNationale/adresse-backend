@@ -5,6 +5,7 @@ const cors = require('cors')
 const {omit} = require('lodash')
 
 const {expandCommune, expandCommunes} = require('./lib/expand-communes')
+const {createExtraction} = require('./lib/ban')
 const {loadDataset} = require('./lib/db')
 
 const datasets = require('./db/datasets.json')
@@ -12,10 +13,10 @@ const datasets = require('./db/datasets.json')
 function wrap(handler) {
   handler = callbackify(handler)
   return (req, res) => {
-    handler(req, (err, result) => {
+    handler(req, res, (err, result) => {
       if (err) {
         res.status(500).send({code: 500, message: err.message})
-      } else {
+      } else if (result) {
         res.send(result)
       }
     })
@@ -33,6 +34,17 @@ app.param('id', (req, res, next, id) => {
   }
   next()
 })
+
+app.get('/ban/extract', wrap(async (req, res) => {
+  if (!req.query.communes) {
+    res.sendStatus(400)
+    return
+  }
+  const codesCommunes = req.query.communes.split(',')
+  const extraction = await createExtraction(codesCommunes)
+  res.type('text/csv')
+  extraction.pipe(res)
+}))
 
 app.get('/datasets', (req, res) => {
   res.send(datasets)
