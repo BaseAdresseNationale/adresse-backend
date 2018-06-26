@@ -3,6 +3,7 @@ const path = require('path')
 const express = require('express')
 const cors = require('cors')
 const {omit} = require('lodash')
+const contentDisposition = require('content-disposition')
 
 const {expandCommune, expandCommunes} = require('./lib/expand-communes')
 const {createExtraction} = require('./lib/ban')
@@ -42,7 +43,9 @@ app.get('/ban/extract', wrap(async (req, res) => {
   }
   const codesCommunes = req.query.communes.split(',')
   const extraction = await createExtraction(codesCommunes)
-  res.type('text/csv')
+  const date = (new Date()).toISOString().substr(0, 10).replace(/-/g, '')
+  res.set('Content-Disposition', contentDisposition(`${date}_bal_xxxxxxxxx.csv`))
+  res.set('Content-Type', 'text/csv')
   extraction.pipe(res)
 }))
 
