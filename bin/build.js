@@ -117,6 +117,7 @@ async function main() {
     let report = null
     let error = null
     let status = 'unknow'
+    let lastUpdate
 
     // Download and validate dataset
     try {
@@ -128,7 +129,9 @@ async function main() {
 
       console.log('Sauvegarde…')
       await saveReport(pick(report, REPORT_KEYS_TO_PERSIST), dataset.id)
-      await saveData(extractAsTree(report.normalizedRows), dataset.id)
+      const tree = extractAsTree(report.normalizedRows)
+      lastUpdate = tree.dateMAJ
+      await saveData(tree, dataset.id)
 
       console.log(chalk.green('Terminé !'))
       status = 'ok'
@@ -148,6 +151,7 @@ async function main() {
       license: dataset.license,
       licenseLabel: getLicenseLabel(dataset.license),
       valid: report && checkReport(report),
+      lastUpdate,
       page: dataset.page,
       organization: pick(dataset.organization, ['name', 'page', 'logo'])
     }
