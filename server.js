@@ -8,6 +8,7 @@ const contentDisposition = require('content-disposition')
 const {expandCommune, expandCommunes} = require('./lib/expand-communes')
 const {createExtraction} = require('./lib/ban')
 const {loadDataset} = require('./lib/db')
+const {sortByNumero} = require('./lib/helpers/sort')
 
 const datasets = require('./db/datasets.json')
 
@@ -80,7 +81,7 @@ app.get('/datasets/:id/data/:codeCommune', wrap(async req => {
 app.get('/datasets/:id/data/:codeCommune/:codeVoie', wrap(async req => {
   const dataset = await loadDataset(req.dataset.id)
   const voie = dataset.communes[req.params.codeCommune].voies[req.params.codeVoie]
-  return {...voie, numeros: Object.values(voie.numeros)}
+  return {...voie, numeros: sortByNumero(Object.values(voie.numeros))}
 }))
 
 const port = process.env.PORT || 5000
