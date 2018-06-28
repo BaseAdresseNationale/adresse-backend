@@ -18,7 +18,7 @@ const REPORT_KEYS_TO_PERSIST = [
   'fileValidation',
   'rowsWithErrors',
   'parseMeta',
-  'rowErrorsCount'
+  'rowsErrorsCount'
 ]
 
 /*
