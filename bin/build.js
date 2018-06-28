@@ -118,6 +118,7 @@ async function main() {
     let error = null
     let status = 'unknow'
     let lastUpdate
+    let count
 
     // Download and validate dataset
     try {
@@ -131,6 +132,7 @@ async function main() {
       await saveReport(pick(report, REPORT_KEYS_TO_PERSIST), dataset.id)
       const tree = extractAsTree(report.normalizedRows)
       lastUpdate = tree.dateMAJ
+      count = tree.numerosCount
       await saveData(tree, dataset.id)
 
       console.log(chalk.green('Terminé !'))
@@ -152,6 +154,7 @@ async function main() {
       licenseLabel: getLicenseLabel(dataset.license),
       valid: report && checkReport(report),
       lastUpdate,
+      count,
       page: dataset.page,
       organization: pick(dataset.organization, ['name', 'page', 'logo'])
     }
