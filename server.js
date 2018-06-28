@@ -81,7 +81,10 @@ app.get('/datasets/:id/data/:codeCommune', wrap(async req => {
 app.get('/datasets/:id/data/:codeCommune/:codeVoie', wrap(async req => {
   const dataset = await loadDataset(req.dataset.id)
   const voie = dataset.communes[req.params.codeCommune].voies[req.params.codeVoie]
-  return {...voie, numeros: sortByNumero(Object.values(voie.numeros))}
+  if (voie.numeros) {
+    return {...voie, numeros: sortByNumero(Object.values(voie.numeros))}
+  }
+  return voie
 }))
 
 const port = process.env.PORT || 5000

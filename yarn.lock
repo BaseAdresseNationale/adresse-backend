@@ -44,9 +44,9 @@
   dependencies:
     arrify "^1.0.1"
 
-"@etalab/bal@^0.4.0":
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/@etalab/bal/-/bal-0.4.0.tgz#adabfabbd436f220752eda7f4a0e43df62aac3a2"
+"@etalab/bal@^0.4.1":
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/@etalab/bal/-/bal-0.4.1.tgz#dff02850a34f25f3dc590b1afdd110d27786b60b"
   dependencies:
     blob-to-buffer "^1.2.8"
     date-fns "^1.29.0"
