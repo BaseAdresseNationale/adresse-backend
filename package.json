@@ -17,7 +17,7 @@
     "start": "node server"
   },
   "dependencies": {
-    "@etalab/bal": "^0.5.0",
+    "@etalab/bal": "^0.6.0",
     "@etalab/cog": "^0.1.0",
     "bluebird": "^3.5.1",
     "chalk": "^2.4.1",

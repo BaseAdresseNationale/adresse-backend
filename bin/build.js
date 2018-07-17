@@ -8,7 +8,7 @@ const got = require('got')
 const {validate, extractAsTree} = require('@etalab/bal')
 
 const {getLicenseLabel} = require('../lib/helpers/licenses')
-const {checkReport, saveReport, saveData} = require('../lib/helpers/report')
+const {saveReport, saveData} = require('../lib/helpers/report')
 
 const REPORT_KEYS_TO_PERSIST = [
   'knownFields',
@@ -151,7 +151,7 @@ async function main() {
       description: dataset.description,
       license: dataset.license,
       licenseLabel: getLicenseLabel(dataset.license),
-      valid: report && checkReport(report),
+      valid: report && report.isValid,
       lastUpdate,
       count,
       page: dataset.page,
