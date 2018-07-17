@@ -5,11 +5,10 @@ const bluebird = require('bluebird')
 const chalk = require('chalk')
 const {pick} = require('lodash')
 const got = require('got')
-const {validate} = require('@etalab/bal')
+const {validate, extractAsTree} = require('@etalab/bal')
 
 const {getLicenseLabel} = require('../lib/helpers/licenses')
 const {checkReport, saveReport, saveData} = require('../lib/helpers/report')
-const {extractAsTree} = require('../lib/tree')
 
 const REPORT_KEYS_TO_PERSIST = [
   'knownFields',
