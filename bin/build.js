@@ -31,6 +31,10 @@ function isCertified(organization) {
     badges.some(b => b.kind === 'public-service')
 }
 
+function isBAL(resource) {
+  return resource.format === 'csv' || resource.url.endsWith('csv')
+}
+
 async function getOrganization(organization) {
   const {id} = organization
   const response = await got(`https://www.data.gouv.fr/api/1/organizations/${id}/`, {json: true})
@@ -46,11 +50,11 @@ async function getDatasets() {
   // Filter only data with csv
   console.log(chalk.blue.bold(data.length) + ' jeux de données trouvés')
   const datasets = data.filter(dataset => {
-    return dataset.resources.some(resource => resource.format === 'csv')
+    return dataset.resources.some(isBAL)
   })
 
   // Fetch dataset organization
-  const organizations = await Promise.all(datasets.map(async dataset => {
+  const organizations = await Promise.all(datasets.map(dataset => {
     return getOrganization(dataset.organization)
   }))
 
@@ -112,7 +116,7 @@ async function main() {
   // Create reports
   const datasets = await bluebird.mapSeries(data, async dataset => {
     console.log(chalk.blue(dataset.title))
-    const {url} = dataset.resources.find(ressource => ressource.format === 'csv')
+    const {url} = dataset.resources.find(isBAL)
     let report = null
     let error = null
     let status = 'unknow'
