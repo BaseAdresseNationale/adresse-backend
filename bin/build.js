@@ -59,12 +59,12 @@ async function getDatasets() {
   }))
 
   // Filter certified datasets with certified organization
-  const certifiedDataset = datasets.filter(dataset => {
+  const certifiedDatasets = datasets.filter(dataset => {
     const organization = organizations.find(organization => organization.id === dataset.organization.id)
     return isCertified(organization)
   })
 
-  return certifiedDataset
+  return certifiedDatasets
 }
 
 async function saveDatasets(datasets) {
