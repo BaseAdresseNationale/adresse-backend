@@ -119,7 +119,7 @@ async function main() {
     const {url} = dataset.resources.find(isBAL)
     let report = null
     let error = null
-    let status = 'unknow'
+    let status = 'unknown'
     let lastUpdate
     let count
 
@@ -143,7 +143,7 @@ async function main() {
     } catch (err) {
       console.error(chalk.red(err))
       status = 'malformed'
-      error = error.message
+      error = err.message
     }
 
     return {
