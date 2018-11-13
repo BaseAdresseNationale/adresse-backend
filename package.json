@@ -13,7 +13,7 @@
   "scripts": {
     "lint": "xo",
     "test": "ava",
-    "build-dataset": "node bin/build",
+    "build-dataset": "./bin/build.js",
     "start": "node server"
   },
   "dependencies": {

@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env node --max_old_space_size=4096
 const path = require('path')
 const fs = require('fs-extra')
 const bluebird = require('bluebird')
@@ -114,7 +114,7 @@ async function main() {
   console.log(chalk.green.bold(data.length) + ' jeux de données éligibles')
 
   // Create reports
-  const datasets = await bluebird.mapSeries(data, async dataset => {
+  const datasets = await bluebird.map(data, async dataset => {
     console.log(chalk.blue(dataset.title))
     const {url} = dataset.resources.find(isBAL)
     let report = null
@@ -161,7 +161,7 @@ async function main() {
       page: dataset.page,
       organization: pick(dataset.organization, ['name', 'page', 'logo'])
     }
-  })
+  }, {concurrency: 4})
 
   try {
     await saveDatasets(datasets)
