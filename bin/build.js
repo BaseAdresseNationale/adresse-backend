@@ -3,7 +3,7 @@ const path = require('path')
 const fs = require('fs-extra')
 const bluebird = require('bluebird')
 const chalk = require('chalk')
-const {pick} = require('lodash')
+const {pick, take} = require('lodash')
 const got = require('got')
 const {validate, extractAsTree} = require('@etalab/bal')
 
@@ -15,9 +15,8 @@ const REPORT_KEYS_TO_PERSIST = [
   'unknownFields',
   'aliasedFields',
   'fileValidation',
-  'rowsWithErrors',
-  'parseMeta',
-  'rowsErrorsCount'
+  'rowsWithIssues',
+  'parseMeta'
 ]
 
 /*
@@ -132,7 +131,13 @@ async function main() {
       report = await validate(buffer)
 
       console.log('Sauvegarde…')
-      await saveReport(pick(report, REPORT_KEYS_TO_PERSIST), dataset.id)
+      const persistableReport = pick(report, REPORT_KEYS_TO_PERSIST)
+      persistableReport.rowsWithIssues = take(
+        report.rowsWithIssues,
+        1000
+      )
+      persistableReport.rowsWithIssuesCount = report.rowsWithIssues.length
+      await saveReport(persistableReport, dataset.id)
       const tree = extractAsTree(report.normalizedRows)
       lastUpdate = tree.dateMAJ
       count = tree.numerosCount
