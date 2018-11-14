@@ -58,10 +58,10 @@
   dependencies:
     arrify "^1.0.1"
 
-"@etalab/bal@^0.11.0":
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/@etalab/bal/-/bal-0.11.0.tgz#9ff524552ac4d26f72de1e55b4bfeae925133f36"
-  integrity sha512-VXDyi7CEci1PreKJJY8yVDDtYQbxsrYYkT//DM8UXD5cKu8d8QcGxYbQZknAVbFo5Z7qsRbQnSkXkLPKBa7a/w==
+"@etalab/bal@^0.11.1":
+  version "0.11.1"
+  resolved "https://registry.yarnpkg.com/@etalab/bal/-/bal-0.11.1.tgz#aabaa9bcac3c2fe93c1d5b22815c77fac457a0d8"
+  integrity sha512-Wm4mHHpgpeEoFOJFtWQOhw+yxYua1lwziNMrWV8D2Da9THcDEs8utbQ6Njjn4vj8pJm7oK82lk59dnbQbW6Xjg==
   dependencies:
     blob-to-buffer "^1.2.8"
     date-fns "^1.29.0"
