@@ -29,7 +29,7 @@ const app = express()
 
 app.use(cors())
 
-app.param('id', (req, res, next, id) => {
+app.param('datasetId', (req, res, next, id) => {
   req.dataset = datasets.find(d => d.id === id)
   if (!req.dataset) {
     return res.sendStatus(404)
@@ -54,15 +54,15 @@ app.get('/datasets', (req, res) => {
   res.send(datasets)
 })
 
-app.get('/datasets/:id', (req, res) => {
+app.get('/datasets/:datasetId', (req, res) => {
   res.send(req.dataset)
 })
 
-app.get('/datasets/:id/report', (req, res) => {
+app.get('/datasets/:datasetId/report', (req, res) => {
   res.sendFile(path.join(__dirname, 'db', 'reports', req.dataset.id + '.json'))
 })
 
-app.get('/datasets/:id/data/summary', wrap(async req => {
+app.get('/datasets/:datasetId/data/summary', wrap(async req => {
   const dataset = await loadDataset(req.dataset.id)
   return {
     ...dataset,
@@ -72,13 +72,13 @@ app.get('/datasets/:id/data/summary', wrap(async req => {
   }
 }))
 
-app.get('/datasets/:id/data/:codeCommune', wrap(async req => {
+app.get('/datasets/:datasetId/data/:codeCommune', wrap(async req => {
   const dataset = await loadDataset(req.dataset.id)
   const commune = await expandCommune(dataset.communes[req.params.codeCommune])
   return {...commune, voies: Object.values(commune.voies).map(v => omit(v, 'numeros'))}
 }))
 
-app.get('/datasets/:id/data/:codeCommune/:codeVoie', wrap(async req => {
+app.get('/datasets/:datasetId/data/:codeCommune/:codeVoie', wrap(async req => {
   const dataset = await loadDataset(req.dataset.id)
   const voie = dataset.communes[req.params.codeCommune].voies[req.params.codeVoie]
   if (voie.numeros) {
