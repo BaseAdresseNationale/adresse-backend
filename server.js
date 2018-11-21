@@ -5,6 +5,7 @@ const express = require('express')
 const cors = require('cors')
 const {omit} = require('lodash')
 const contentDisposition = require('content-disposition')
+const Keyv = require('keyv')
 
 const {expandCommune, expandCommunes} = require('./lib/expand-communes')
 const {createExtraction} = require('./lib/ban')
@@ -13,11 +14,15 @@ const {sortByNumero} = require('./lib/helpers/sort')
 
 const datasets = require('./db/datasets.json')
 
+const fantoirDatabase = new Keyv(`sqlite://${process.env.FANTOIR_DB_PATH}`)
+
 function wrap(handler) {
   handler = callbackify(handler)
   return (req, res) => {
     handler(req, res, (err, result) => {
-      if (err) {
+      if (err && err.notFound) {
+        res.status(404).send({code: 404, message: err.message})
+      } else if (err) {
         res.status(500).send({code: 500, message: err.message})
       } else if (result) {
         res.send(result)
@@ -87,6 +92,21 @@ app.get('/datasets/:datasetId/data/:codeCommune/:codeVoie', wrap(async req => {
   }
   return voie
 }))
+
+app.get('/fantoir/:codeCommune', wrap(async req => {
+  const {codeCommune} = req.params
+  const fantoirCommune = await fantoirDatabase.get(codeCommune)
+  if (!fantoirCommune) {
+    throw notFound('Commune non présente dans FANTOIR')
+  }
+  return {raw: fantoirCommune}
+}))
+
+function notFound(message) {
+  const error = new Error(message)
+  error.notFound = true
+  return error
+}
 
 const port = process.env.PORT || 5000
 
