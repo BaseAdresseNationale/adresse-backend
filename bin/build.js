@@ -10,6 +10,11 @@ const {validate, extractAsTree} = require('@etalab/bal')
 const {getLicenseLabel} = require('../lib/helpers/licenses')
 const {saveReport, saveData} = require('../lib/helpers/report')
 
+const BAL_AITF_WHITELIST = [
+  '5bc53abf06e3e76f9a88f2c4', // BAL Cap Atlantique / Nantes Métropole
+  '5bd9067a06e3e739998c0ebb' // BAL Cap Atlantique / Pays de la Loire
+]
+
 const REPORT_KEYS_TO_PERSIST = [
   'knownFields',
   'unknownFields',
@@ -49,22 +54,21 @@ async function getDatasets() {
 
   // Filter only data with csv
   console.log(chalk.blue.bold(data.length) + ' jeux de données trouvés')
-  const datasets = data.filter(dataset => {
-    return dataset.resources.some(isBAL)
-  })
+  const datasets = data
+    .filter(dataset => dataset.resources.some(isBAL))
+    .filter(dataset => !BAL_AITF_WHITELIST.includes(dataset.id))
 
   // Fetch dataset organization
   const organizations = await Promise.all(datasets.map(dataset => {
     return getOrganization(dataset.organization)
   }))
 
-  // Filter certified datasets with certified organization
-  const certifiedDatasets = datasets.filter(dataset => {
-    const organization = organizations.find(organization => organization.id === dataset.organization.id)
-    return isCertified(organization)
-  })
-
-  return certifiedDatasets
+  return datasets
+    .filter(dataset => {
+      const organization = organizations
+        .find(organization => organization.id === dataset.organization.id)
+      return isCertified(organization)
+    })
 }
 
 async function saveDatasets(datasets) {
