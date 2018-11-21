@@ -16,7 +16,8 @@ const REPORT_KEYS_TO_PERSIST = [
   'aliasedFields',
   'fileValidation',
   'rowsWithIssues',
-  'parseMeta'
+  'parseMeta',
+  'issuesSummary'
 ]
 
 /*
