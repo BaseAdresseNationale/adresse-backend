@@ -1,30 +1,13 @@
 require('dotenv').config()
-const {callbackify} = require('util')
 const express = require('express')
 const cors = require('cors')
 const contentDisposition = require('content-disposition')
 const Keyv = require('keyv')
+const wrap = require('./lib/util/wrap')
 const {createExtraction} = require('./lib/ban')
 const {getDatasets, getReport, getSummary, getCommune, getVoie} = require('./lib/datasets')
 
 const fantoirDatabase = new Keyv(`sqlite://${process.env.FANTOIR_DB_PATH}`)
-
-function wrap(handler) {
-  handler = callbackify(handler)
-  return (req, res, next) => {
-    handler(req, res, next, (err, result) => {
-      if (err && err.notFound) {
-        res.status(404).send({code: 404, message: err.message})
-      } else if (err) {
-        res.status(500).send({code: 500, message: err.message})
-      } else if (result) {
-        res.send(result)
-      } else {
-        next()
-      }
-    })
-  }
-}
 
 const app = express()
 
