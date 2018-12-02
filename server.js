@@ -1,31 +1,26 @@
 require('dotenv').config()
 const {callbackify} = require('util')
-const path = require('path')
 const express = require('express')
 const cors = require('cors')
-const {omit} = require('lodash')
 const contentDisposition = require('content-disposition')
 const Keyv = require('keyv')
-
-const {expandCommune, expandCommunes} = require('./lib/expand-communes')
 const {createExtraction} = require('./lib/ban')
-const {loadDataset} = require('./lib/db')
-const {sortByNumero} = require('./lib/helpers/sort')
-
-const datasets = require('./db/datasets.json')
+const {getDatasets, getReport, getSummary, getCommune, getVoie} = require('./lib/datasets')
 
 const fantoirDatabase = new Keyv(`sqlite://${process.env.FANTOIR_DB_PATH}`)
 
 function wrap(handler) {
   handler = callbackify(handler)
-  return (req, res) => {
-    handler(req, res, (err, result) => {
+  return (req, res, next) => {
+    handler(req, res, next, (err, result) => {
       if (err && err.notFound) {
         res.status(404).send({code: 404, message: err.message})
       } else if (err) {
         res.status(500).send({code: 500, message: err.message})
       } else if (result) {
         res.send(result)
+      } else {
+        next()
       }
     })
   }
@@ -34,14 +29,6 @@ function wrap(handler) {
 const app = express()
 
 app.use(cors())
-
-app.param('datasetId', (req, res, next, id) => {
-  req.dataset = datasets.find(d => d.id === id)
-  if (!req.dataset) {
-    return res.sendStatus(404)
-  }
-  next()
-})
 
 app.get('/ban/extract', wrap(async (req, res) => {
   if (!req.query.communes) {
@@ -56,41 +43,40 @@ app.get('/ban/extract', wrap(async (req, res) => {
   extraction.pipe(res)
 }))
 
+app.use('/datasets', wrap(async req => {
+  req.datasets = await getDatasets()
+}))
+
+app.param('datasetId', (req, res, next, id) => {
+  req.dataset = req.datasets.find(d => d.id === id)
+  if (!req.dataset) {
+    return res.sendStatus(404)
+  }
+  next()
+})
+
 app.get('/datasets', (req, res) => {
-  res.send(datasets)
+  res.send(req.datasets)
 })
 
 app.get('/datasets/:datasetId', (req, res) => {
   res.send(req.dataset)
 })
 
-app.get('/datasets/:datasetId/report', (req, res) => {
-  res.sendFile(path.join(__dirname, 'db', 'reports', req.dataset.id + '.json'))
-})
-
-app.get('/datasets/:datasetId/data/summary', wrap(async req => {
-  const dataset = await loadDataset(req.dataset.id)
-  return {
-    ...dataset,
-    communes: await expandCommunes(
-      Object.values(dataset.communes).map(c => omit(c, 'voies'))
-    )
-  }
+app.get('/datasets/:datasetId/report', wrap(req => {
+  return getReport(req.dataset.id)
 }))
 
-app.get('/datasets/:datasetId/data/:codeCommune', wrap(async req => {
-  const dataset = await loadDataset(req.dataset.id)
-  const commune = await expandCommune(dataset.communes[req.params.codeCommune])
-  return {...commune, voies: Object.values(commune.voies).map(v => omit(v, 'numeros'))}
+app.get('/datasets/:datasetId/data/summary', wrap(req => {
+  return getSummary(req.dataset.id)
 }))
 
-app.get('/datasets/:datasetId/data/:codeCommune/:codeVoie', wrap(async req => {
-  const dataset = await loadDataset(req.dataset.id)
-  const voie = dataset.communes[req.params.codeCommune].voies[req.params.codeVoie]
-  if (voie.numeros) {
-    return {...voie, numeros: sortByNumero(Object.values(voie.numeros))}
-  }
-  return voie
+app.get('/datasets/:datasetId/data/:codeCommune', wrap(req => {
+  return getCommune(req.dataset.id, req.params.codeCommune)
+}))
+
+app.get('/datasets/:datasetId/data/:codeCommune/:codeVoie', wrap(req => {
+  return getVoie(req.dataset.id, req.params.codeCommune, req.params.codeVoie)
 }))
 
 app.get('/fantoir/:codeCommune', wrap(async req => {
