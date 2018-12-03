@@ -3,6 +3,7 @@ const express = require('express')
 const cors = require('cors')
 const contentDisposition = require('content-disposition')
 const Keyv = require('keyv')
+const morgan = require('morgan')
 const wrap = require('./lib/util/wrap')
 const {createExtraction} = require('./lib/ban')
 const {getDatasets, getReport, getSummary, getCommune, getVoie} = require('./lib/datasets')
@@ -12,6 +13,10 @@ const fantoirDatabase = new Keyv(`sqlite://${process.env.FANTOIR_DB_PATH}`)
 const app = express()
 
 app.use(cors())
+
+if (process.env.NODE_ENV !== 'production') {
+  app.use(morgan('dev'))
+}
 
 app.get('/ban/extract', wrap(async (req, res) => {
   if (!req.query.communes) {
