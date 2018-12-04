@@ -28,7 +28,7 @@ app.get('/ban/extract', wrap(async (req, res) => {
   const date = (new Date()).toISOString().substr(0, 10).replace(/-/g, '')
   res.set('Content-Disposition', contentDisposition(`${date}_bal_xxxxxxxxx.csv`))
   res.set('Content-Type', 'text/csv')
-  extraction.pipe(res)
+  return extraction
 }))
 
 app.use('/datasets', wrap(async req => {
