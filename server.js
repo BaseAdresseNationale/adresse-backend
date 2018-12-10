@@ -6,7 +6,7 @@ const Keyv = require('keyv')
 const morgan = require('morgan')
 const wrap = require('./lib/util/wrap')
 const {createCommunesExtraction, createDepartementExtraction} = require('./lib/ban/extract')
-const {getDatasets, getReport, getStats, getSummary, getCommune, getVoie} = require('./lib/datasets')
+const {getDatasets, getReport, getSummary, getCommune, getVoie, computeStats} = require('./lib/datasets')
 
 const fantoirDatabase = new Keyv(`sqlite://${process.env.FANTOIR_DB_PATH}`)
 
@@ -58,7 +58,7 @@ app.get('/datasets', (req, res) => {
 })
 
 app.get('/datasets/stats', (req, res) => {
-  res.send(getStats(req.datasets))
+  res.send(computeStats(req.datasets))
 })
 
 app.get('/datasets/:datasetId', (req, res) => {
