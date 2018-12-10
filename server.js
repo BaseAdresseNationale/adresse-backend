@@ -5,7 +5,7 @@ const contentDisposition = require('content-disposition')
 const Keyv = require('keyv')
 const morgan = require('morgan')
 const wrap = require('./lib/util/wrap')
-const {createExtraction} = require('./lib/ban')
+const {createCommunesExtraction, createDepartementExtraction} = require('./lib/ban/extract')
 const {getDatasets, getReport, getSummary, getCommune, getVoie} = require('./lib/datasets')
 
 const fantoirDatabase = new Keyv(`sqlite://${process.env.FANTOIR_DB_PATH}`)
@@ -18,16 +18,26 @@ if (process.env.NODE_ENV !== 'production') {
   app.use(morgan('dev'))
 }
 
-app.get('/ban/extract', wrap(async (req, res) => {
-  if (!req.query.communes) {
-    res.sendStatus(400)
-    return
-  }
-  const codesCommunes = req.query.communes.split(',')
-  const extraction = await createExtraction(codesCommunes)
+function setExtractionHeaders(res) {
   const date = (new Date()).toISOString().substr(0, 10).replace(/-/g, '')
   res.set('Content-Disposition', contentDisposition(`${date}_bal_xxxxxxxxx.csv`))
   res.set('Content-Type', 'text/csv')
+}
+
+app.get('/ban/extract', wrap(async (req, res) => {
+  if (!req.query.communes && !req.query.departement) {
+    res.sendStatus(400)
+    return
+  }
+  const communes = req.query.communes ? req.query.communes.split(',') : null
+  const {departement} = req.query
+  if (communes) {
+    const extraction = await createCommunesExtraction(communes)
+    setExtractionHeaders(res)
+    return extraction
+  }
+  const extraction = await createDepartementExtraction(departement)
+  setExtractionHeaders(res)
   return extraction
 }))
 
