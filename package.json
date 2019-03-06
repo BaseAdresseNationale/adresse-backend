@@ -1,9 +1,9 @@
 {
-  "name": "@etalab/api-bal",
+  "name": "@etalab/adresse.data.gouv.fr-backend",
   "version": "0.0.0",
-  "description": "API Bases Adresse Locales",
+  "description": "Back-end de adresse.data.gouv.fr",
   "main": "index.js",
-  "repository": "git@github.com:etalab/api-bal.git",
+  "repository": "git@github.com:etalab/adresse.data.gouv.fr-backend.git",
   "contributors": [
     "Théophile Merlière <theophile.merliere@data.gouv.fr>",
     "Jérôme Desboeufs <jerome.desboeufs@data.gouv.fr>"
