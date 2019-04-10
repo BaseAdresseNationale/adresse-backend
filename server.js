@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
@@ -5,6 +6,7 @@ const contentDisposition = require('content-disposition')
 const Keyv = require('keyv')
 const morgan = require('morgan')
 const wrap = require('./lib/util/wrap')
+const mongo = require('./lib/util/mongo')
 const {createCommunesExtraction, createDepartementExtraction} = require('./lib/ban/extract')
 const {getDatasets, getReport, getSummary, getCommune, getVoie, computeStats} = require('./lib/datasets')
 
@@ -90,14 +92,22 @@ app.get('/fantoir/:codeCommune', wrap(async req => {
   return {raw: fantoirCommune}
 }))
 
+app.use('/publication', require('./lib/publication'))
+
 function notFound(message) {
   const error = new Error(message)
   error.notFound = true
   return error
 }
 
-const port = process.env.PORT || 5000
+async function main() {
+  await mongo.connect()
+  await mongo.ensureIndexes()
 
-app.listen(port, () => {
-  console.log('Start listening on port ' + port)
+  app.listen(process.env.PORT || 5000)
+}
+
+main().catch(error => {
+  console.error(error)
+  process.exit(1)
 })
