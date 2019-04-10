@@ -19,6 +19,7 @@
     "@etalab/bal": "^0.17.0",
     "@etalab/cog": "^0.1.0",
     "@etalab/decoupage-administratif": "^0.5.0",
+    "@etalab/project-legal": "^0.3.3",
     "@keyv/sqlite": "^2.0.0",
     "bluebird": "^3.5.2",
     "content-disposition": "^0.5.2",
@@ -43,7 +44,6 @@
     "morgan": "^1.9.1",
     "passport": "^0.4.0",
     "passport-oauth2": "^1.5.0",
-    "proj4": "^2.5.0",
     "pumpify": "^1.5.1",
     "through2": "^2.0.3"
   },
