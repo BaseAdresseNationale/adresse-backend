@@ -33,7 +33,7 @@
     "express-session": "^1.17.0",
     "fs-extra": "^8.1.0",
     "get-stream": "^5.1.0",
-    "got": "^9.6.0",
+    "got": "^10.6.0",
     "iconv-lite": "^0.5.1",
     "into-stream": "^5.1.1",
     "is-stream": "^2.0.0",
