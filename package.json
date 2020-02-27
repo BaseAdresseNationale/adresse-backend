@@ -13,7 +13,7 @@
   "scripts": {
     "lint": "xo",
     "start": "node server",
-    "build-rne": "node lib/publication/build-rne"
+    "build-rne": "node lib/build-rne"
   },
   "dependencies": {
     "@etalab/bal": "^0.20.4",
