@@ -23,6 +23,7 @@ app.get('/fantoir/:codeCommune', w(async (req, res) => {
   if (!fantoirCommune) {
     return res.status(404).send({code: 404, message: 'Commune non présente dans FANTOIR'})
   }
+
   res.send({raw: fantoirCommune})
 }))
 
