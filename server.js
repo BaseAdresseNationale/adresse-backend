@@ -27,12 +27,13 @@ app.get('/fantoir/:codeCommune', w(async (req, res) => {
   res.send({raw: fantoirCommune})
 }))
 
-app.use('/datasets', require('./lib/datasets'))
-app.use('/publication', require('./lib/publication'))
 
 async function main() {
   await mongo.connect()
   await mongo.ensureIndexes()
+
+  app.use('/datasets', require('./lib/datasets'))
+  app.use('/publication', require('./lib/publication'))
 
   app.listen(process.env.PORT || 5000)
 }
