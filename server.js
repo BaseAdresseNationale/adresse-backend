@@ -27,7 +27,6 @@ app.get('/fantoir/:codeCommune', w(async (req, res) => {
   res.send({raw: fantoirCommune})
 }))
 
-app.use('/ban', require('./lib/ban2bal'))
 app.use('/datasets', require('./lib/datasets'))
 app.use('/publication', require('./lib/publication'))
 
