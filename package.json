@@ -19,6 +19,7 @@
     "@etalab/bal": "^0.20.4",
     "@etalab/decoupage-administratif": "^0.7.0",
     "@keyv/sqlite": "^2.0.2",
+    "connect-mongo": "^3.2.0",
     "cors": "^2.8.5",
     "csv-parser": "^2.3.2",
     "dotenv": "^8.2.0",
