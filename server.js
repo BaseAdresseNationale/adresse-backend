@@ -4,6 +4,11 @@ const express = require('express')
 const cors = require('cors')
 const morgan = require('morgan')
 const mongo = require('./lib/util/mongo')
+const HttpProxy = require('http-proxy')
+
+const BACKEND_API_URL = process.env.BACKEND_API_URL || 'https://backend.adresse.data.gouv.fr'
+
+const proxy = new HttpProxy()
 
 const app = express()
 
@@ -19,6 +24,9 @@ async function main() {
 
   app.use('/datasets', require('./lib/datasets'))
   app.use('/publication', require('./lib/publication'))
+  app.use('/backend', (req, res) => {
+    proxy.web(req, res, { target: BACKEND_API_URL, changeOrigin: true})
+  })
 
   app.listen(process.env.PORT || 5000)
 }
