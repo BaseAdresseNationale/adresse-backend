@@ -16,7 +16,7 @@
     "build-rne": "node lib/build-rne"
   },
   "dependencies": {
-    "@etalab/bal": "^0.20.4",
+    "@etalab/bal": "^0.22.0",
     "@etalab/decoupage-administratif": "^0.7.0",
     "@keyv/sqlite": "^2.0.2",
     "connect-mongo": "^3.2.0",
