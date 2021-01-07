@@ -17,6 +17,7 @@ async function main() {
   await mongo.connect()
   await mongo.ensureIndexes()
 
+  app.use('/public', express.static('public'))
   app.use('/datasets', require('./lib/datasets'))
   app.use('/publication', require('./lib/publication'))
 
