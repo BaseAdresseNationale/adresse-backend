@@ -7,7 +7,7 @@ const mongo = require('./lib/util/mongo')
 
 const app = express()
 
-app.use(cors())
+app.use(cors({origin: true}))
 
 if (process.env.NODE_ENV !== 'production') {
   app.use(morgan('dev'))
