@@ -16,7 +16,7 @@
     "build-rne": "node lib/build-rne"
   },
   "dependencies": {
-    "@etalab/bal": "^0.24.0",
+    "@etalab/bal": "^1.0.0",
     "@etalab/decoupage-administratif": "^0.7.0",
     "@keyv/sqlite": "^2.0.2",
     "@slack/web-api": "^6.0.0",
