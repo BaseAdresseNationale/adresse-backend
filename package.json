@@ -15,11 +15,11 @@
     "start": "node server"
   },
   "dependencies": {
-    "@livingdata/keyv": "^4.1.0",
-    "@livingdata/keyv-sqlite": "^2.1.0",
+    "@keyv/sqlite": "^3.0.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "keyv": "^4.1.0",
     "lodash": "^4.17.15",
     "morgan": "^1.9.1"
   },
