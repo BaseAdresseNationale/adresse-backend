@@ -3,7 +3,6 @@ require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
 const morgan = require('morgan')
-const mongo = require('./lib/util/mongo')
 
 const app = express()
 
@@ -14,12 +13,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 async function main() {
-  await mongo.connect()
-  await mongo.ensureIndexes()
-
-  app.use('/public', express.static('public'))
   app.use('/datasets', require('./lib/datasets'))
-  app.use('/publication', require('./lib/publication'))
 
   app.listen(process.env.PORT || 5000)
 }

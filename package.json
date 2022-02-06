@@ -12,33 +12,16 @@
   "private": false,
   "scripts": {
     "lint": "xo",
-    "start": "node server",
-    "build-rne": "node lib/build-rne"
+    "start": "node server"
   },
   "dependencies": {
-    "@etalab/bal": "^1.7.1",
-    "@etalab/decoupage-administratif": "^0.8.0",
     "@livingdata/keyv": "^4.1.0",
     "@livingdata/keyv-sqlite": "^2.1.0",
-    "@slack/web-api": "^6.0.0",
-    "connect-mongo": "^3.2.0",
-    "content-disposition": "^0.5.3",
     "cors": "^2.8.5",
-    "csv-parser": "^2.3.2",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "express-session": "^1.17.0",
-    "fs-extra": "^8.1.0",
-    "get-stream": "^5.1.0",
-    "got": "^10.6.0",
-    "http-errors": "^1.8.0",
     "lodash": "^4.17.15",
-    "mongodb": "^3.5.4",
-    "morgan": "^1.9.1",
-    "nodemailer": "^6.4.17",
-    "passport": "^0.4.1",
-    "passport-oauth2": "^1.5.0",
-    "random-number-csprng": "^1.0.2"
+    "morgan": "^1.9.1"
   },
   "devDependencies": {
     "xo": "^0.27.2"
